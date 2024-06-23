@@ -30,7 +30,7 @@ const FilePage = async ({ params: { fileId } }: PageProps) => {
         {/* Left side */}
         <section className="flex-1 xl:flex">
           <div className="px-4 py-6 sm:px-6 lg:pl-8 xl:flex-1 xl:pl-6">
-            <PdfRenderer />
+            <PdfRenderer url={file.url} />
           </div>
         </section>
 
