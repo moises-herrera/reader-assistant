@@ -11,4 +11,5 @@ type ExtendedText = {
   text: string | JSX.Element;
 };
 
+export type Message = Messages[number];
 export type ExtendedMessage = OmitText & ExtendedText;

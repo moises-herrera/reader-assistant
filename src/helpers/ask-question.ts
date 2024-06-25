@@ -1,6 +1,6 @@
-import { db } from '../db';
-import { embeddingModel, model } from '../lib/ai-model';
-import { pinecone } from '../lib/pinecone';
+import { db } from '@/db';
+import { embeddingModel, model } from '@/lib/ai-model';
+import { pinecone } from '@/lib/pinecone';
 import { PineconeStore } from '@langchain/pinecone';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 import { LangChainAdapter, StreamingTextResponse } from 'ai';
@@ -18,6 +18,7 @@ export const askQuestionToModel = async (
   });
 
   const results = await vectorStore.similaritySearch(message, 4);
+  const context = results.map((result) => result.pageContent).join('\n\n');
 
   const previousMessages = await db.message.findMany({
     where: { fileId },
@@ -36,7 +37,7 @@ export const askQuestionToModel = async (
   const prompt = [
     [
       'system',
-      `Use the following pieces of context (or previous conversaton if needed) to answer the users question in markdown format. \nIf you don't know the answer, just say that you don't know, don't try to make up an answer.`,
+      `You are an expert reader of PDFs. A user has asked you a question about a PDF file. Use the following pieces of context (or previous conversation if needed) to answer the users question in markdown format. Remember answer the question of the USER INPUT specified at the end. \nIf you don't know the answer, just say that you don't know, don't try to make up an answer.`,
     ],
     [
       'human',
@@ -49,7 +50,7 @@ export const askQuestionToModel = async (
         \n----------------\n
         
         CONTEXT:
-        ${results.map((result) => result.pageContent).join('\n\n')}
+        ${context}
         
         USER INPUT: ${message}`,
     ],
@@ -58,8 +59,6 @@ export const askQuestionToModel = async (
   const stream = await model
     .pipe(new StringOutputParser())
     .stream(JSON.stringify(prompt));
-
-  const aiStream = LangChainAdapter.toAIStream(stream);
 
   const saveResponse = async () => {
     const chunks: string[] = [];
@@ -80,6 +79,8 @@ export const askQuestionToModel = async (
   };
 
   saveResponse();
+
+  const aiStream = LangChainAdapter.toAIStream(stream);
 
   return new StreamingTextResponse(aiStream);
 };

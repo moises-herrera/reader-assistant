@@ -10,7 +10,7 @@ interface ChatMessageProps {
   isNextMessageFromSameUser: boolean;
 }
 
-export const ChatMessage: FC<ChatMessageProps> = forwardRef<
+export const ChatMessage = forwardRef<
   HTMLDivElement,
   ChatMessageProps
 >(({ message, isNextMessageFromSameUser }, ref) => {

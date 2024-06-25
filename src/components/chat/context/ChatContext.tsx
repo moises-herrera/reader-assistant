@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { Context, createContext } from 'react';
 
 interface ChatContextProps {
   addMessage: () => void;
@@ -7,9 +7,10 @@ interface ChatContextProps {
   isLoading: boolean;
 }
 
-export const ChatContext = createContext<ChatContextProps>({
-  addMessage: () => {},
-  message: '',
-  handleInputChange: () => {},
-  isLoading: false,
-});
+export const ChatContext: Context<ChatContextProps> =
+  createContext<ChatContextProps>({
+    addMessage: () => {},
+    message: '',
+    handleInputChange: () => {},
+    isLoading: false,
+  });
