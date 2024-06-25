@@ -1,6 +1,10 @@
 import { db } from '@/db';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { createUploadthing, type FileRouter } from 'uploadthing/next';
+import { PDFLoader } from '@langchain/community/document_loaders/fs/pdf';
+import { PineconeStore } from '@langchain/pinecone';
+import { pinecone } from '@/lib/pinecone';
+import { embeddingModel } from '@/lib/ai-model';
 
 const f = createUploadthing();
 
@@ -27,6 +31,33 @@ export const ourFileRouter = {
           uploadStatus: 'PROCESSING',
         },
       });
+
+      try {
+        const response = await fetch(file.url);
+        const blob = await response.blob();
+        const loader = new PDFLoader(blob);
+
+        const pageLevelDocs = await loader.load();
+        const pagesAmt = pageLevelDocs.length;
+
+        // Vectorize document
+        const pineconeIndex = pinecone.Index('reader');
+        await PineconeStore.fromDocuments(pageLevelDocs, embeddingModel, {
+          pineconeIndex,
+          namespace: createdFile.id,
+        });
+
+        await db.file.update({
+          where: { id: createdFile.id },
+          data: { uploadStatus: 'SUCCESS' },
+        });
+      } catch (error) {
+        console.log(error);
+        await db.file.update({
+          where: { id: createdFile.id },
+          data: { uploadStatus: 'FAILED' },
+        });
+      }
     }),
 } satisfies FileRouter;
 

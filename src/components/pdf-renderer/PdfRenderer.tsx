@@ -1,17 +1,26 @@
 'use client';
 
 import { FC, useState } from 'react';
-import { Document, Page } from 'react-pdf';
+import { Document, Page, pdfjs } from 'react-pdf';
 
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
-import 'pdfjs-dist/webpack';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { useResizeDetector } from 'react-resize-detector';
 import SimpleBar from 'simplebar-react';
 import { PdfToolbar } from './PdfToolbar';
 import { cn } from '@/lib';
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.mjs',
+  import.meta.url
+).toString();
+
+const options = {
+  cMapUrl: '/cmaps/',
+  standardFontDataUrl: '/standard_fonts/',
+};
 
 interface PdfRendererProps {
   url: string;
@@ -52,6 +61,7 @@ export const PdfRenderer: FC<PdfRendererProps> = ({ url }) => {
         <SimpleBar autoHide={false} className="max-h-[calc(100vh-10rem)]">
           <div ref={ref}>
             <Document
+              options={options}
               loading={
                 <div className="flex justify-center">
                   <Loader2 className="my-24 h-6 w-6 animate-spin" />

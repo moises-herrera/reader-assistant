@@ -3,6 +3,7 @@ import { privateProcedure, publicProcedure, router } from './trpc';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/db';
+import { INFINITE_QUERY_LIMIT } from '@/config/infinite-query';
 
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -40,6 +41,76 @@ export const appRouter = router({
 
     return files;
   }),
+  getFileMessages: privateProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.string().nullish(),
+        fileId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { userId } = ctx;
+      const { fileId, limit, cursor } = input;
+      const messagesToTake = limit ?? INFINITE_QUERY_LIMIT;
+
+      const file = await db.file.findFirst({
+        where: {
+          id: fileId,
+          userId,
+        },
+      });
+
+      if (!file) throw new TRPCError({ code: 'NOT_FOUND' });
+
+      const messages = await db.message.findMany({
+        where: {
+          fileId,
+          userId,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        take: messagesToTake + 1,
+        cursor: cursor
+          ? {
+              id: cursor,
+            }
+          : undefined,
+        select: {
+          id: true,
+          isUserMessage: true,
+          createdAt: true,
+          text: true,
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+
+      if (messages.length > messagesToTake) {
+        const nextItem = messages.pop();
+        nextCursor = nextItem?.id;
+      }
+
+      return {
+        messages,
+        nextCursor,
+      };
+    }),
+  getFileUploadStatus: privateProcedure
+    .input(z.object({ fileId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const file = await db.file.findFirst({
+        where: {
+          id: input.fileId,
+          userId: ctx.userId,
+        },
+      });
+
+      if (!file) return { status: 'PENDING' as const };
+
+      return { status: file.uploadStatus };
+    }),
   getFile: privateProcedure
     .input(z.object({ key: z.string() }))
     .mutation(async ({ ctx, input }) => {
