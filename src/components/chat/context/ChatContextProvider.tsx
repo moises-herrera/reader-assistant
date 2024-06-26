@@ -96,7 +96,6 @@ export const ChatContextProvider: FC<ChatContextProviderProps> = ({
         });
       }
 
-      console.log(stream);
       const reader = stream.getReader();
       const decoder = new TextDecoder();
       let done = false;
@@ -142,7 +141,7 @@ export const ChatContextProvider: FC<ChatContextProviderProps> = ({
                     if (message.id === 'ai-response') {
                       return {
                         ...message,
-                        text: message.text + accumulatedResponse,
+                        text: accumulatedResponse,
                       };
                     }
 

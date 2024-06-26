@@ -1337,7 +1337,7 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@prisma/client@^5.16.0":
+"@prisma/client@^5.15.1":
   version "5.16.0"
   resolved "https://registry.yarnpkg.com/@prisma/client/-/client-5.16.0.tgz#903495c4a0c91891b04ddcbd25cc42705d861fae"
   integrity sha512-8NOQSzgrSgpU2YcNm4MsPR4/vNvZdUBPuyX89PwWlClSKZeDjPSZ8+eds/ffu1Ttrjnm8V8D0hjgqpyc6wyqDg==
@@ -4281,10 +4281,10 @@ langchain@0.2.3:
     zod "^3.22.4"
     zod-to-json-schema "^3.22.3"
 
-langchain@^0.2.6:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/langchain/-/langchain-0.2.6.tgz#22249707ba800c38ec9a6cca36e383a881227393"
-  integrity sha512-vDAJHGu/lA4pn3hkyzSC6RiaZhtj0ozfRyG8L6J2vCnXyJV/lgk9uGMP2x645EBrSozBMHJBng1UYeaUR/1fQQ==
+langchain@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/langchain/-/langchain-0.2.7.tgz#3554beda9f136385a6cd6c3bca7566ddaaa951ca"
+  integrity sha512-VtEcl1xBiebsbnXJMOqlK+H7IvD7EK/UUk6k2HG77mtqTViiv1AR5T/ivHlUrL1ATKitMHz24mAYJKMHeNrzYA==
   dependencies:
     "@langchain/core" "~0.2.0"
     "@langchain/openai" ">=0.1.0 <0.3.0"

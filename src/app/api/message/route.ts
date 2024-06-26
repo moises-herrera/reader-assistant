@@ -3,6 +3,7 @@ import { SendMessageValidator } from '@/lib/validators/SendMessageValidator';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { NextRequest } from 'next/server';
 import { askQuestionToModel } from '@/helpers/ask-question';
+import { responseSSE } from '@/helpers/response-sse';
 
 /**
  * Ask a question about a PDF file.
@@ -40,9 +41,30 @@ export const POST = async (req: NextRequest) => {
   });
 
   try {
-    const streamingResponse = await askQuestionToModel(message, fileId, userId);
+    return responseSSE({ request: req }, async (sendEvent) => {
+      const streamingResponse = await askQuestionToModel(
+        message,
+        fileId,
+        userId
+      );
 
-    return streamingResponse;
+      let result = '';
+
+      for await (const chunk of streamingResponse) {
+        result += chunk.content;
+        sendEvent(chunk.content);
+      }
+
+      await db.message.create({
+        data: {
+          text: result,
+          isUserMessage: false,
+          fileId,
+          userId,
+        },
+      });
+      sendEvent(null);
+    });
   } catch (error) {
     console.error(error);
     return new Response('An error occurred', { status: 500 });
