@@ -5,5 +5,5 @@ export const getAbsoluteUrl = (path: string) => {
     return `https://${process.env.VERCEL_URL}${path}`;
   }
 
-  return `http://localhost:${process.env.PORT ?? 3000}${path}`;
+  return `${process.env.BASE_URL}${path}`;
 };
