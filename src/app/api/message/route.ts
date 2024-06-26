@@ -42,11 +42,7 @@ export const POST = async (req: NextRequest) => {
 
   try {
     return responseSSE({ request: req }, async (sendEvent) => {
-      const streamingResponse = await askQuestionToModel(
-        message,
-        fileId,
-        userId
-      );
+      const streamingResponse = await askQuestionToModel(message, fileId);
 
       let result = '';
 

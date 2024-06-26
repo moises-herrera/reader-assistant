@@ -4,11 +4,7 @@ import { pinecone } from '@/lib/pinecone';
 import { PineconeStore } from '@langchain/pinecone';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
 
-export const askQuestionToModel = async (
-  message: string,
-  fileId: string,
-  userId: string
-) => {
+export const askQuestionToModel = async (message: string, fileId: string) => {
   const pineconeIndex = pinecone.Index('reader');
 
   const vectorStore = await PineconeStore.fromExistingIndex(embeddingModel, {
