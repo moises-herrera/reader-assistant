@@ -66,5 +66,8 @@
     "prisma": "^5.15.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.0.2"
+  },
+  "resolutions": {
+    "string-width": "4.2.3"
   }
 }
