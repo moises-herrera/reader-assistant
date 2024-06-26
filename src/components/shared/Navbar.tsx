@@ -1,3 +1,5 @@
+'use server';
+
 import Link from 'next/link';
 import { MaxWidthWrapper } from './MaxWidthWrapper';
 import { buttonVariants } from '@/components/ui/button';

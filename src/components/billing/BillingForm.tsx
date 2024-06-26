@@ -1,7 +1,6 @@
 'use client';
 
 import { FC, FormEventHandler } from 'react';
-import { getUserSubscriptionPlan } from '@/helpers/get-user-subscription-plan';
 import { useToast } from '@/components/ui/use-toast';
 import { trpc } from '@/app/_trpc/client';
 import { MaxWidthWrapper } from '@/components';
@@ -15,9 +14,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
+import { UserSubscriptionPlan } from '@/interfaces/user-subscription-plan';
 
 interface BillingFormProps {
-  subscriptionPlan: Awaited<ReturnType<typeof getUserSubscriptionPlan>>;
+  subscriptionPlan: UserSubscriptionPlan;
 }
 
 export const BillingForm: FC<BillingFormProps> = ({ subscriptionPlan }) => {

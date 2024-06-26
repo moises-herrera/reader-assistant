@@ -1,12 +1,12 @@
 import { PLANS } from '@/config/stripe';
 import { db } from '@/db';
+import { UserSubscriptionPlan } from '@/interfaces/user-subscription-plan';
 import { stripe } from '@/lib/stripe';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/types';
 
-export async function getUserSubscriptionPlan() {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
-
+export async function getUserSubscriptionPlan(
+  user: KindeUser
+): Promise<UserSubscriptionPlan> {
   if (!user?.id) {
     return {
       ...PLANS[0],

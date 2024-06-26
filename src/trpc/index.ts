@@ -5,8 +5,9 @@ import { TRPCError } from '@trpc/server';
 import { db } from '@/db';
 import { INFINITE_QUERY_LIMIT } from '@/config/infinite-query';
 import { getAbsoluteUrl } from '@/helpers/get-absolute-url';
-import { getUserSubscriptionPlan, stripe } from '@/lib/stripe';
+import { stripe } from '@/lib/stripe';
 import { PLANS } from '@/config/stripe';
+import { getUserSubscriptionPlan } from '@/helpers/get-user-subscription-plan';
 
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -45,7 +46,7 @@ export const appRouter = router({
     return files;
   }),
   createStripeSession: privateProcedure.mutation(async ({ ctx }) => {
-    const { userId } = ctx;
+    const { userId, user } = ctx;
 
     const billingUrl = getAbsoluteUrl('/dashboard/billing');
 
@@ -59,7 +60,7 @@ export const appRouter = router({
 
     if (!dbUser) throw new TRPCError({ code: 'UNAUTHORIZED' });
 
-    const subscriptionPlan = await getUserSubscriptionPlan();
+    const subscriptionPlan = await getUserSubscriptionPlan(user);
 
     if (subscriptionPlan.isSubscribed && dbUser.stripeCustomerId) {
       const stripeSession = await stripe.billingPortal.sessions.create({
