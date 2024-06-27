@@ -4,7 +4,7 @@ import { PLANS } from '@/config/stripe';
 import { PRICING_ITEMS } from '@/constants/pricing';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
-export const PricingPage = async () => {
+const PricingPage = async () => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
