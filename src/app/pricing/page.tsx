@@ -1,4 +1,5 @@
-import { MaxWidthWrapper, PlanCard } from '@/components';
+import { MaxWidthWrapper } from '@/components/shared/MaxWidthWrapper';
+import { PlanCard } from '@/components/pricing/PlanCard';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { PLANS } from '@/config/stripe';
 import { PRICING_ITEMS } from '@/constants/pricing';

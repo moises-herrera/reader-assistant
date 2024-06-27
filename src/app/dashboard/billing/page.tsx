@@ -1,7 +1,7 @@
-import { BillingForm } from '@/components';
+import { redirect } from 'next/navigation';
+import { BillingForm } from '@/components/billing/BillingForm';
 import { getUserSubscriptionPlan } from '@/helpers/get-user-subscription-plan';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { redirect } from 'next/navigation';
 
 const BillingPage = async () => {
   const { getUser } = getKindeServerSession();

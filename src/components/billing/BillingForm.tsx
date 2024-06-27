@@ -3,7 +3,7 @@
 import { FC, FormEventHandler } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { trpc } from '@/app/_trpc/client';
-import { MaxWidthWrapper } from '@/components';
+import { MaxWidthWrapper } from '@/components/shared/MaxWidthWrapper';
 import {
   Card,
   CardDescription,

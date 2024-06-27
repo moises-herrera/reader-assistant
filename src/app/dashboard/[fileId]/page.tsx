@@ -1,4 +1,5 @@
-import { ChatWrapper, PdfRenderer } from '@/components';
+import { ChatWrapper } from '@/components/chat/ChatWrapper';
+import { PdfRenderer } from '@/components/pdf-renderer/PdfRenderer';
 import { db } from '@/db';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { notFound, redirect } from 'next/navigation';
