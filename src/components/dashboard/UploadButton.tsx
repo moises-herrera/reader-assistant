@@ -1,11 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { UploadDropZone } from './UploadDropZone';
 
-export const UploadButton = () => {
+interface UploadButtonProps {
+  isSubscribed: boolean;
+}
+
+export const UploadButton: FC<UploadButtonProps> = ({ isSubscribed }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
@@ -22,7 +26,7 @@ export const UploadButton = () => {
       </DialogTrigger>
 
       <DialogContent aria-describedby="upload-files">
-        <UploadDropZone />
+        <UploadDropZone isSubscribed={isSubscribed} />
       </DialogContent>
     </Dialog>
   );

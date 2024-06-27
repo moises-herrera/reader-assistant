@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import DropZone from 'react-dropzone';
 import { Cloud, File as FileIcon, Loader2 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
@@ -9,14 +9,20 @@ import { useToast } from '../ui/use-toast';
 import { trpc } from '@/app/_trpc/client';
 import { useRouter } from 'next/navigation';
 
-export const UploadDropZone = () => {
+interface UploadDropZoneProps {
+  isSubscribed: boolean;
+}
+
+export const UploadDropZone: FC<UploadDropZoneProps> = ({ isSubscribed }) => {
   const router = useRouter();
 
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const { toast } = useToast();
 
-  const { startUpload } = useUploadThing('pdfUploader');
+  const { startUpload } = useUploadThing(
+    isSubscribed ? 'proPlanUploader' : 'freePlanUploader'
+  );
 
   const { mutate: startPolling } = trpc.getFile.useMutation({
     onSuccess: (file) => {
@@ -92,7 +98,9 @@ export const UploadDropZone = () => {
                   <span className="font-semibold">Click to upload</span> or drag
                   and drop
                 </p>
-                <p className="text-xs text-zinc-500">PDF (up to 4MB)</p>
+                <p className="text-xs text-zinc-500">
+                  PDF (up to {isSubscribed ? '16' : '4'}MB)
+                </p>
               </div>
 
               {acceptedFiles.length && acceptedFiles[0] ? (
