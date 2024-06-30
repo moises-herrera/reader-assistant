@@ -29,7 +29,6 @@ export function constructMetadata({
     },
     icons,
     metadataBase: new URL('https://reader-assistant.vercel.app'),
-    themeColor: '#fff',
     ...(noIndex && {
       robots: {
         index: false,
